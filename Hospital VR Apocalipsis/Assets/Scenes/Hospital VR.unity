@@ -867,6 +867,7 @@ GameObject:
   - component: {fileID: 280503647}
   - component: {fileID: 280503646}
   - component: {fileID: 280503645}
+  - component: {fileID: 280503649}
   m_Layer: 0
   m_Name: 2
   m_TagString: Untagged
@@ -947,7 +948,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -999,7 +1000,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 280503649}
+        m_TargetAssemblyTypeName: KeypadButton, Assembly-CSharp
+        m_MethodName: Press
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
@@ -1024,6 +1037,20 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+--- !u!114 &280503649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280503643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 2
+  keypad: {fileID: 0}
 --- !u!1001 &318717717
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1375,6 +1402,7 @@ GameObject:
   - component: {fileID: 373205244}
   - component: {fileID: 373205243}
   - component: {fileID: 373205242}
+  - component: {fileID: 373205246}
   m_Layer: 0
   m_Name: 1
   m_TagString: Untagged
@@ -1434,7 +1462,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -1486,7 +1514,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 373205246}
+        m_TargetAssemblyTypeName: KeypadButton, Assembly-CSharp
+        m_MethodName: Press
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
@@ -1530,8 +1570,22 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.11132145, y: 0.11470905, z: 0.08495426}
-  m_Center: {x: 0.0025148392, y: 0.005309686, z: 0.0029520988}
+  m_Size: {x: 0.11132145, y: 0.11470905, z: 0.044195175}
+  m_Center: {x: 0.0025148392, y: 0.005309686, z: 0.0065484047}
+--- !u!114 &373205246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373205240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 1
+  keypad: {fileID: 0}
 --- !u!1 &394816306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1789,6 +1843,7 @@ GameObject:
   - component: {fileID: 499838164}
   - component: {fileID: 499838163}
   - component: {fileID: 499838162}
+  - component: {fileID: 499838166}
   m_Layer: 0
   m_Name: 6
   m_TagString: Untagged
@@ -1848,7 +1903,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -1946,6 +2001,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.101667404, y: 0.11393133, z: 0.043414116}
   m_Center: {x: -0.0015330315, y: 0.0015330166, z: 0.003066063}
+--- !u!114 &499838166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499838160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 6
+  keypad: {fileID: 0}
 --- !u!1 &516823321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2217,6 +2286,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.40185273, z: 1}
   m_Center: {x: 0, y: 1.0001323, z: 0}
+--- !u!1 &659091017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8518551479873711469, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+  m_PrefabInstance: {fileID: 1681748535}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &659091018 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 261487842041778042, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+  m_PrefabInstance: {fileID: 1681748535}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &659091021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659091017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e93f1f64590754ba8ec15ab452616d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessCode: 2580
+  door: {fileID: 659091018}
+  openRotation: {x: 0, y: 90, z: 0}
+  speed: 2
 --- !u!1 &712944400
 GameObject:
   m_ObjectHideFlags: 0
@@ -3145,6 +3240,7 @@ GameObject:
   - component: {fileID: 850168113}
   - component: {fileID: 850168112}
   - component: {fileID: 850168111}
+  - component: {fileID: 850168115}
   m_Layer: 0
   m_Name: 9
   m_TagString: Untagged
@@ -3204,7 +3300,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -3300,8 +3396,22 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.113922596, y: 0.12007585, z: 1}
-  m_Center: {x: 0.0030767918, y: 0.0030767173, z: 0}
+  m_Size: {x: 0.113922596, y: 0.12007585, z: 0.055349827}
+  m_Center: {x: 0.0030767918, y: 0.0030767173, z: 0.004795313}
+--- !u!114 &850168115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850168109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 9
+  keypad: {fileID: 0}
 --- !u!1 &867389043
 GameObject:
   m_ObjectHideFlags: 0
@@ -4124,6 +4234,142 @@ MonoBehaviour:
   m_MinAdditionalVelocityScalar: 0.05
   m_MaxAdditionalVelocityScalar: 1.5
   m_EnableDebugLines: 0
+--- !u!1 &1238564431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1238564432}
+  - component: {fileID: 1238564434}
+  - component: {fileID: 1238564433}
+  m_Layer: 5
+  m_Name: TextCodigo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1238564432
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238564431}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0011406335, y: 0.0011406335, z: 0.0011406335}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1485018518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.002, y: -0.001}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1238564433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238564431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: codigo
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1238564434
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238564431}
+  m_CullTransparentMesh: 1
 --- !u!1 &1248377340
 GameObject:
   m_ObjectHideFlags: 0
@@ -4169,6 +4415,7 @@ GameObject:
   - component: {fileID: 1276148318}
   - component: {fileID: 1276148317}
   - component: {fileID: 1276148316}
+  - component: {fileID: 1276148320}
   m_Layer: 0
   m_Name: 8
   m_TagString: Untagged
@@ -4228,7 +4475,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -4326,6 +4573,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10776901, y: 0.11699915, z: 0.055466652}
   m_Center: {x: -0.0030765533, y: 0.004614949, z: 0.004615307}
+--- !u!114 &1276148320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276148314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 8
+  keypad: {fileID: 0}
 --- !u!1 &1292489175
 GameObject:
   m_ObjectHideFlags: 0
@@ -4724,6 +4985,7 @@ GameObject:
   - component: {fileID: 1311137491}
   - component: {fileID: 1311137490}
   - component: {fileID: 1311137489}
+  - component: {fileID: 1311137493}
   m_Layer: 0
   m_Name: 7
   m_TagString: Untagged
@@ -4783,7 +5045,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -4881,6 +5143,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10211849, y: 0.121222556, z: 0.05244875}
   m_Center: {x: 0.005731106, y: 0.0038207024, z: 0.0038206577}
+--- !u!114 &1311137493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311137487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 7
+  keypad: {fileID: 0}
 --- !u!1 &1320393309
 GameObject:
   m_ObjectHideFlags: 0
@@ -5196,6 +5472,7 @@ GameObject:
   - component: {fileID: 1401520296}
   - component: {fileID: 1401520295}
   - component: {fileID: 1401520294}
+  - component: {fileID: 1401520298}
   m_Layer: 0
   m_Name: 5
   m_TagString: Untagged
@@ -5255,7 +5532,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -5353,6 +5630,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10779905, y: 0.11393148, z: 0.049545765}
   m_Center: {x: -0.001532793, y: 0.00459899, z: 0.0061318874}
+--- !u!114 &1401520298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401520292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 5
+  keypad: {fileID: 0}
 --- !u!1 &1429582814
 GameObject:
   m_ObjectHideFlags: 0
@@ -6022,6 +6313,82 @@ RectTransform:
   m_AnchoredPosition: {x: 441.80002, y: 181.7}
   m_SizeDelta: {x: 1080.329, y: 444.3091}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1485018517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1485018518}
+  - component: {fileID: 1485018520}
+  - component: {fileID: 1485018519}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1485018518
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485018517}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1238564432}
+  m_Father: {fileID: 2118541099}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1485018519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485018517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1485018520
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485018517}
+  m_CullTransparentMesh: 1
 --- !u!1 &1487918217
 GameObject:
   m_ObjectHideFlags: 0
@@ -6657,6 +7024,7 @@ GameObject:
   - component: {fileID: 1672077659}
   - component: {fileID: 1672077658}
   - component: {fileID: 1672077657}
+  - component: {fileID: 1672077661}
   m_Layer: 0
   m_Name: 0
   m_TagString: Untagged
@@ -6697,7 +7065,7 @@ MonoBehaviour:
   m_ReturnToInitialPosition: 1
   m_ApplyIfChildIsTarget: 1
   m_ClampToMaxDistance: 0
-  m_MaxDistance: 0
+  m_MaxDistance: 0.5
   m_PokeFilter: {fileID: 1672077658}
 --- !u!114 &1672077658
 MonoBehaviour:
@@ -6716,7 +7084,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -6812,8 +7180,22 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.10477018, y: 0.11183116, z: 1}
-  m_Center: {x: -0.0036690235, y: 0.007199034, z: 0}
+  m_Size: {x: 0.10477018, y: 0.11183116, z: 0.050554276}
+  m_Center: {x: -0.0036690235, y: 0.007199034, z: 0.0071926117}
+--- !u!114 &1672077661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672077655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0
+  keypad: {fileID: 0}
 --- !u!1001 &1681748535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7006,6 +7388,22 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 48b1e3f03c520b343bc3163b426a9e8b, type: 2}
+    - target: {fileID: 261487842041778042, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 261487842041778042, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 261487842041778042, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 261487842041778042, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
       propertyPath: m_Name
       value: Hospital
@@ -7117,7 +7515,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8518551479873711469, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 659091021}
   m_SourcePrefab: {fileID: 100100000, guid: 237fb08fa03cf35478a7f3c8f025890c, type: 3}
 --- !u!1 &1685982395
 GameObject:
@@ -7318,6 +7719,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1749935735}
   m_CullTransparentMesh: 1
+--- !u!1 &1750111088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1750111090}
+  - component: {fileID: 1750111089}
+  m_Layer: 0
+  m_Name: KeypadManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1750111089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750111088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e2fc490f02d8e241ba18b6bb7d8cf4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  display: {fileID: 1238564433}
+  doors:
+  - {fileID: 659091021}
+--- !u!4 &1750111090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750111088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.7746162, y: 0.1055378, z: -4.461044}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774819599
 GameObject:
   m_ObjectHideFlags: 0
@@ -7452,6 +7900,7 @@ GameObject:
   - component: {fileID: 1813649656}
   - component: {fileID: 1813649655}
   - component: {fileID: 1813649654}
+  - component: {fileID: 1813649658}
   m_Layer: 0
   m_Name: 3
   m_TagString: Untagged
@@ -7507,11 +7956,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Interactable: {fileID: 1813649656}
-  m_PokeCollider: {fileID: 1813649657}
+  m_PokeCollider: {fileID: 1774819600}
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -7609,6 +8058,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10473299, y: 0.110865176, z: 0.055677414}
   m_Center: {x: 0.00000023841858, y: -0.00000008940697, z: 0.003066063}
+--- !u!114 &1813649658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813649652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 3
+  keypad: {fileID: 0}
 --- !u!1 &1841108391
 GameObject:
   m_ObjectHideFlags: 0
@@ -8039,6 +8502,7 @@ GameObject:
   - component: {fileID: 2000009209}
   - component: {fileID: 2000009208}
   - component: {fileID: 2000009207}
+  - component: {fileID: 2000009211}
   m_Layer: 0
   m_Name: 4
   m_TagString: Untagged
@@ -8098,7 +8562,7 @@ MonoBehaviour:
   m_PokeConfiguration:
     m_UseConstant: 1
     m_ConstantValue:
-      m_PokeDirection: 3
+      m_PokeDirection: 6
       m_InteractionDepthOffset: 0
       m_EnablePokeAngleThreshold: 1
       m_PokeAngleThreshold: 45
@@ -8196,6 +8660,20 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+--- !u!114 &2000009211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000009205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf7a0e7b04baca4d894f75765fb209b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 4
+  keypad: {fileID: 0}
 --- !u!1 &2016036100
 GameObject:
   m_ObjectHideFlags: 0
@@ -8647,6 +9125,108 @@ Transform:
   m_Children: []
   m_Father: {fileID: 772702908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2118541095
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118541099}
+  - component: {fileID: 2118541098}
+  - component: {fileID: 2118541097}
+  - component: {fileID: 2118541096}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2118541096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118541095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &2118541097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118541095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
+--- !u!223 &2118541098
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118541095}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 1529486459}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &2118541099
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118541095}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -4.3062}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1485018518}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 6.8116, y: 0.2832}
+  m_SizeDelta: {x: 0.2618, y: 0.091}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &94807479115630124
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10528,3 +11108,5 @@ SceneRoots:
   - {fileID: 1841108394}
   - {fileID: 168811347}
   - {fileID: 1774819601}
+  - {fileID: 1750111090}
+  - {fileID: 2118541099}
