@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -15,6 +16,12 @@ public class ResiduoClasificable : MonoBehaviour
     [Header("Solo para tarros")]
     public ColorTarro colorTarro;
     public TipoResiduo tipoAceptado;
+
+    [Header("⏱️ Configuración de destrucción")]
+    [Tooltip("Tiempo en segundos antes de destruir el residuo correcto")]
+    public float tiempoAntesDestruir = 0.5f;
+    [Tooltip("¿Animar antes de destruir?")]
+    public bool usarAnimacion = true;
 
     private UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socket;
 
@@ -37,15 +44,30 @@ public class ResiduoClasificable : MonoBehaviour
     private void ValidarResiduo(SelectEnterEventArgs args)
     {
         ResiduoClasificable residuo = args.interactableObject.transform.GetComponent<ResiduoClasificable>();
+
         if (residuo != null && !residuo.esTarro)
         {
             if (residuo.tipoResiduo == tipoAceptado)
             {
+                Debug.Log($"✅ {residuo.tipoResiduo} clasificado correctamente en {colorTarro}");
+
+                // Registrar en el GameManager
                 GameManager.Instance.RegistrarDeposito(residuo.tipoResiduo);
                 FeedbackCorrecto();
+
+                // 🔥 DESTRUIR EL RESIDUO CON O SIN ANIMACIÓN
+                if (usarAnimacion)
+                {
+                    StartCoroutine(DestruirConAnimacion(residuo.gameObject));
+                }
+                else
+                {
+                    Destroy(residuo.gameObject, tiempoAntesDestruir);
+                }
             }
             else
             {
+                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro}");
                 FeedbackError();
                 ExpulsarResiduo(args.interactableObject.transform);
             }
@@ -64,13 +86,56 @@ public class ResiduoClasificable : MonoBehaviour
         }
     }
 
+    // ✨ Animación de desaparición
+    private IEnumerator DestruirConAnimacion(GameObject obj)
+    {
+        // Desactivar interacción XR para que no se pueda agarrar
+        var grabInteractable = obj.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        if (grabInteractable != null)
+        {
+            grabInteractable.enabled = false;
+        }
+
+        // Desactivar físicas
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
+        // Esperar un momento antes de empezar la animación
+        yield return new WaitForSeconds(tiempoAntesDestruir);
+
+        // Animar reducción de escala
+        float duracion = 0.3f;
+        float tiempo = 0f;
+        Vector3 escalaInicial = obj.transform.localScale;
+
+        while (tiempo < duracion)
+        {
+            float t = tiempo / duracion;
+            float curva = Mathf.Sin(t * Mathf.PI * 0.5f);
+            obj.transform.localScale = Vector3.Lerp(escalaInicial, Vector3.zero, curva);
+
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+
+        // Destruir el objeto
+        Destroy(obj);
+        Debug.Log($"🗑️ Residuo destruido");
+    }
+
     private void FeedbackCorrecto()
     {
         // Luz verde, sonido, vibración
+        Debug.Log("✅ Feedback correcto activado");
     }
 
     private void FeedbackError()
     {
         // Luz roja, sonido de error, vibración
+        Debug.Log("❌ Feedback error activado");
     }
 }

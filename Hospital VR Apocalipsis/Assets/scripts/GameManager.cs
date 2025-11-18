@@ -137,6 +137,14 @@ public class GameManager : MonoBehaviour
             renderer.material.color = ObtenerColorDelResiduo(tipo);
         }
 
+        // 🔹 DESACTIVAR COLLIDER TEMPORALMENTE para evitar atasco
+        Collider bolsaCollider = bolsa.GetComponent<Collider>();
+        if (bolsaCollider != null)
+        {
+            bolsaCollider.enabled = false;
+            StartCoroutine(ActivarColliderDespues(bolsaCollider, 0.3f));
+        }
+
         // Configurar físicas
         Rigidbody rb = bolsa.GetComponent<Rigidbody>();
         if (rb != null)
@@ -145,12 +153,12 @@ public class GameManager : MonoBehaviour
             rb.isKinematic = false;
 
             // Dirección de salida = eje Z del SpawnPoint + leve inclinación hacia arriba
-            Vector3 direccion = (spawnRot * Vector3.forward + Vector3.up * 0.2f).normalized;
-            float fuerza = 6.5f; // ajusta según la masa del Rigidbody
+            Vector3 direccion = (spawnRot * Vector3.forward + Vector3.up * 0.15f).normalized;
+            float fuerza = 3.5f; // ajustada para lanzamiento más suave
             rb.AddForce(direccion * fuerza, ForceMode.Impulse);
 
             // Pequeña rotación aleatoria para que no salga rígida
-            rb.AddTorque(Random.insideUnitSphere * 2f, ForceMode.Impulse);
+            rb.AddTorque(Random.insideUnitSphere * 1f, ForceMode.Impulse);
 
             // Animación de aparición
             bolsa.transform.localScale = Vector3.zero;
@@ -183,6 +191,14 @@ public class GameManager : MonoBehaviour
         }
 
         obj.localScale = escalaFinal;
+    }
+
+    // ⏱️ Activar el collider después de un delay
+    private IEnumerator ActivarColliderDespues(Collider col, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (col != null)
+            col.enabled = true;
     }
 
     // 🎨 Obtener color según tipo
