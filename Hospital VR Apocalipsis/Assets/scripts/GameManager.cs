@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +16,25 @@ public class GameManager : MonoBehaviour
     public Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro> mapaClasificacion = new();
     public Dictionary<ResiduoClasificable.TipoResiduo, int> totalPorTipo = new();
     public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosPorTipo = new();
+
+    [Header("Prefabs de bolsas por tipo")]
+    public GameObject bolsaRoja;
+    public GameObject bolsaAmarilla;
+    public GameObject bolsaVerde;
+    public GameObject bolsaAzul;
+    public GameObject bolsaNaranja;
+
+
+    [Header("Conteo de residuos")]
+    [SerializeField] private int totalResiduosEscena;
+    [SerializeField] private int residuosRecogidos;
+
+    [Header("Conteo de bolsas")]
+    [SerializeField] private int totalBolsasEscena;
+    [SerializeField] private int bolsasDepositadas;
+
+    [Header("Evento final")]
+    [SerializeField] private bool eventoActivado=false;
 
     private void Awake()
     {
@@ -33,6 +53,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Cuenta la cantidad de residuos al iniciar
+        var residuos = FindObjectsByType<ResiduoClasificable>(FindObjectsSortMode.None);
+        totalResiduosEscena = residuos.Count(r => !r.esTarro);
+
         // Cuántos residuos necesita cada tipo para generar su bolsa
         totalPorTipo = new Dictionary<ResiduoClasificable.TipoResiduo, int>
         {
@@ -45,6 +69,27 @@ public class GameManager : MonoBehaviour
 
         ActualizarPanel();
     }
+
+    public void RegistrarResiduoRecogido()
+    {
+        residuosRecogidos++;
+        RevisarFinDelJuego();
+    }
+
+    private GameObject ObtenerPrefabBolsa(ResiduoClasificable.TipoResiduo tipo)
+    {
+        switch (tipo)
+        {
+            case ResiduoClasificable.TipoResiduo.Biologico: return bolsaRoja;
+            case ResiduoClasificable.TipoResiduo.Quimico: return bolsaAmarilla;
+            case ResiduoClasificable.TipoResiduo.Reciclable: return bolsaVerde;
+            case ResiduoClasificable.TipoResiduo.PapelLimpio: return bolsaAzul;
+            case ResiduoClasificable.TipoResiduo.Ordinario: return bolsaNaranja;
+            default: return bolsaRoja;
+        }
+    }
+
+
 
     // 🔸 Registrar cada residuo depositado correctamente
     public void RegistrarDeposito(ResiduoClasificable.TipoResiduo tipo)
@@ -127,8 +172,15 @@ public class GameManager : MonoBehaviour
         }
 
         // Instanciar la bolsa en el punto exacto
-        GameObject bolsa = Instantiate(prefabBolsa, spawnPos, spawnRot);
+        GameObject prefab = ObtenerPrefabBolsa(tipo);
+        GameObject bolsa = Instantiate(prefab, spawnPos, spawnRot);
+
         bolsa.name = $"Bolsa_{tipo}";
+
+
+        // Registrar bolsa creada
+        totalBolsasEscena++;
+
 
         // Aplicar color dinámico según el tipo de residuo
         Renderer renderer = bolsa.GetComponentInChildren<Renderer>();
@@ -214,4 +266,37 @@ public class GameManager : MonoBehaviour
             default: return Color.white;
         }
     }
+
+    public void RegistrarBolsaDepositada()
+    {
+        bolsasDepositadas++;
+        RevisarFinDelJuego();
+    }
+
+    private void RevisarFinDelJuego()
+    {
+        if (eventoActivado) return;
+
+        bool todosResiduosRecogidos = residuosRecogidos >= totalResiduosEscena;
+        bool todasBolsasDepositadas = bolsasDepositadas >= totalBolsasEscena;
+
+        if (todosResiduosRecogidos && todasBolsasDepositadas)
+        {
+            eventoActivado = true;
+            ActivarEventoFinal();
+        }
+    }
+
+    private void ActivarEventoFinal()
+    {
+        Debug.Log("🎉 TODOS LOS RESIDUOS recogidos y TODAS LAS BOLSAS depositadas");
+        // Logica:
+        // sonido del teléfono
+        // animación
+        // video 3D
+        // score final
+    }
+
+
+
 }

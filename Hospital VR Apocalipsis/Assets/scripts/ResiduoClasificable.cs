@@ -62,6 +62,8 @@ public class ResiduoClasificable : MonoBehaviour
                 }
                 else
                 {
+                    GameManager.Instance.RegistrarResiduoRecogido();
+
                     Destroy(residuo.gameObject, tiempoAntesDestruir);
                 }
             }
@@ -121,6 +123,8 @@ public class ResiduoClasificable : MonoBehaviour
             tiempo += Time.deltaTime;
             yield return null;
         }
+
+        GameManager.Instance.RegistrarResiduoRecogido();
 
         // Destruir el objeto
         Destroy(obj);
