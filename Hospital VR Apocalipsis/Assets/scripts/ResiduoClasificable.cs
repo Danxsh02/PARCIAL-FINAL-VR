@@ -47,15 +47,17 @@ public class ResiduoClasificable : MonoBehaviour
 
         if (residuo != null && !residuo.esTarro)
         {
+            // Si el tipo del residuo coincide con el tipo aceptado -> correcto
             if (residuo.tipoResiduo == tipoAceptado)
             {
                 Debug.Log($"✅ {residuo.tipoResiduo} clasificado correctamente en {colorTarro}");
 
-                // Registrar en el GameManager
+                // Registrar en el GameManager (correcto)
                 GameManager.Instance.RegistrarDeposito(residuo.tipoResiduo);
+
                 FeedbackCorrecto();
 
-                // 🔥 DESTRUIR EL RESIDUO CON O SIN ANIMACIÓN
+                // Destruir y contar como recogido
                 if (usarAnimacion)
                 {
                     StartCoroutine(DestruirConAnimacion(residuo.gameObject));
@@ -63,15 +65,29 @@ public class ResiduoClasificable : MonoBehaviour
                 else
                 {
                     GameManager.Instance.RegistrarResiduoRecogido();
-
                     Destroy(residuo.gameObject, tiempoAntesDestruir);
                 }
             }
             else
             {
-                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro}");
+                // Ahora cualquier residuo entra en la caneca, pero lo registramos como ERROR
+                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro} — será registrado como error pero aceptado");
+
                 FeedbackError();
-                ExpulsarResiduo(args.interactableObject.transform);
+
+                // Registrar error en el GameManager (esto incrementa erroresTotales y depositadosIncorrectosPorTipo)
+                GameManager.Instance.RegistrarError(residuo.tipoResiduo);
+
+                // Destruir igual (con o sin animación) y contar como recogido
+                if (usarAnimacion)
+                {
+                    StartCoroutine(DestruirConAnimacion(residuo.gameObject));
+                }
+                else
+                {
+                    GameManager.Instance.RegistrarResiduoRecogido();
+                    Destroy(residuo.gameObject, tiempoAntesDestruir);
+                }
             }
         }
     }

@@ -17,13 +17,16 @@ public class GameManager : MonoBehaviour
     public Dictionary<ResiduoClasificable.TipoResiduo, int> totalPorTipo = new();
     public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosPorTipo = new();
 
+    // Nuevo: registros de incorrectos
+    public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosIncorrectosPorTipo = new();
+    public int erroresTotales = 0;
+
     [Header("Prefabs de bolsas por tipo")]
     public GameObject bolsaRoja;
     public GameObject bolsaAmarilla;
     public GameObject bolsaVerde;
     public GameObject bolsaAzul;
     public GameObject bolsaNaranja;
-
 
     [Header("Conteo de residuos")]
     [SerializeField] private int totalResiduosEscena;
@@ -34,7 +37,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int bolsasDepositadas;
 
     [Header("Evento final")]
-    [SerializeField] private bool eventoActivado=false;
+    [SerializeField] private bool eventoActivado = false;
+
+    // ---- Campos para finales ----
+    [Header("Final bueno")]
+    public AudioSource telefonoAudio;
+    public GameObject panelFinalBueno; // panel UI con mensaje bueno
+
+    [Header("Final malo (video 360)")]
+    public Transform posicionVideo360; // punto dentro del "shader/video360"
+    public Transform jugador; // XR Origin o Main Camera parent que teletransportarás
+    public GameObject panelFinalMalo; // panel UI con mensaje malo
+    public GameObject video360GameObject; // objeto controlador del video 360 (activar/reproducir)
 
     private void Awake()
     {
@@ -89,8 +103,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
     // 🔸 Registrar cada residuo depositado correctamente
     public void RegistrarDeposito(ResiduoClasificable.TipoResiduo tipo)
     {
@@ -111,6 +123,19 @@ public class GameManager : MonoBehaviour
         ActualizarPanel();
     }
 
+    // ---- Nuevo: Registrar error (deposito incorrecto) ----
+    public void RegistrarError(ResiduoClasificable.TipoResiduo tipo)
+    {
+        if (!depositadosIncorrectosPorTipo.ContainsKey(tipo))
+            depositadosIncorrectosPorTipo[tipo] = 0;
+
+        depositadosIncorrectosPorTipo[tipo]++;
+        erroresTotales++;
+
+        Debug.Log($"❌ ERROR registrado para {tipo}. Total errores: {erroresTotales}");
+        ActualizarPanel(); // opcional: muestra cambios en panel si quieres
+    }
+
     // 🔹 Actualizar texto del panel
     void ActualizarPanel()
     {
@@ -119,8 +144,11 @@ public class GameManager : MonoBehaviour
         string texto = "";
         foreach (var tipo in totalPorTipo.Keys)
         {
-            int faltan = totalPorTipo[tipo] - depositadosPorTipo.GetValueOrDefault(tipo, 0);
-            texto += $"{tipo}: {(faltan > 0 ? $"Faltan {faltan}" : "¡Completado!")}\n";
+            int correctos = depositadosPorTipo.GetValueOrDefault(tipo, 0);
+            int faltan = totalPorTipo[tipo] - correctos;
+            int incorrectos = depositadosIncorrectosPorTipo.GetValueOrDefault(tipo, 0);
+
+            texto += $"{tipo}: {(faltan > 0 ? $"Faltan {faltan}" : "¡Completado!")} (err: {incorrectos})\n";
         }
 
         panelTexto.text = texto;
@@ -177,10 +205,8 @@ public class GameManager : MonoBehaviour
 
         bolsa.name = $"Bolsa_{tipo}";
 
-
         // Registrar bolsa creada
         totalBolsasEscena++;
-
 
         // Aplicar color dinámico según el tipo de residuo
         Renderer renderer = bolsa.GetComponentInChildren<Renderer>();
@@ -290,13 +316,59 @@ public class GameManager : MonoBehaviour
     private void ActivarEventoFinal()
     {
         Debug.Log("🎉 TODOS LOS RESIDUOS recogidos y TODAS LAS BOLSAS depositadas");
-        // Logica:
-        // sonido del teléfono
-        // animación
-        // video 3D
-        // score final
+
+        // Elegir final según erroresTotales
+        if (erroresTotales == 0)
+        {
+            Debug.Log("🏆 FINAL BUENO: Clasificación perfecta");
+            StartCoroutine(FinalBueno());
+        }
+        else
+        {
+            Debug.Log("💀 FINAL MALO: Hubo errores en la clasificación");
+            StartCoroutine(FinalMalo());
+        }
     }
 
+    // ------------------ Corutinas de final ------------------
 
+    private IEnumerator FinalBueno()
+    {
+        // Pequeña espera para dramatizar
+        yield return new WaitForSeconds(1.2f);
 
+        // Reproducir sonido del teléfono si está asignado
+        if (telefonoAudio != null)
+            telefonoAudio.Play();
+
+        // Mostrar panel final bueno
+        if (panelFinalBueno != null)
+            panelFinalBueno.SetActive(true);
+
+        // Opcional: puedes pausar input, bloquear movimiento, etc.
+        Debug.Log("🏆 Mostrado panel final bueno");
+    }
+
+    private IEnumerator FinalMalo()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        // Teletransportar al jugador dentro del espacio del video 360
+        if (jugador != null && posicionVideo360 != null)
+        {
+            // Opcional: guardar rotación anterior si quieres restaurarla luego
+            jugador.position = posicionVideo360.position;
+            jugador.rotation = posicionVideo360.rotation;
+        }
+
+        // Activar/arrancar el video 360 si tienes un GameObject que lo controla
+        if (video360GameObject != null)
+            video360GameObject.SetActive(true);
+
+        // Mostrar panel final malo
+        if (panelFinalMalo != null)
+            panelFinalMalo.SetActive(true);
+
+        Debug.Log("💀 Teletransportado al jugador y mostrado panel final malo");
+    }
 }
