@@ -47,17 +47,15 @@ public class ResiduoClasificable : MonoBehaviour
 
         if (residuo != null && !residuo.esTarro)
         {
-            // Si el tipo del residuo coincide con el tipo aceptado -> correcto
             if (residuo.tipoResiduo == tipoAceptado)
             {
                 Debug.Log($"✅ {residuo.tipoResiduo} clasificado correctamente en {colorTarro}");
 
-                // Registrar en el GameManager (correcto)
+                // Registrar en el GameManager
                 GameManager.Instance.RegistrarDeposito(residuo.tipoResiduo);
-
                 FeedbackCorrecto();
 
-                // Destruir y contar como recogido
+                // 🔥 DESTRUIR EL RESIDUO CON O SIN ANIMACIÓN
                 if (usarAnimacion)
                 {
                     StartCoroutine(DestruirConAnimacion(residuo.gameObject));
@@ -65,29 +63,15 @@ public class ResiduoClasificable : MonoBehaviour
                 else
                 {
                     GameManager.Instance.RegistrarResiduoRecogido();
+
                     Destroy(residuo.gameObject, tiempoAntesDestruir);
                 }
             }
             else
             {
-                // Ahora cualquier residuo entra en la caneca, pero lo registramos como ERROR
-                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro} — será registrado como error pero aceptado");
-
+                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro}");
                 FeedbackError();
-
-                // Registrar error en el GameManager (esto incrementa erroresTotales y depositadosIncorrectosPorTipo)
-                GameManager.Instance.RegistrarError(residuo.tipoResiduo);
-
-                // Destruir igual (con o sin animación) y contar como recogido
-                if (usarAnimacion)
-                {
-                    StartCoroutine(DestruirConAnimacion(residuo.gameObject));
-                }
-                else
-                {
-                    GameManager.Instance.RegistrarResiduoRecogido();
-                    Destroy(residuo.gameObject, tiempoAntesDestruir);
-                }
+                ExpulsarResiduo(args.interactableObject.transform);
             }
         }
     }
