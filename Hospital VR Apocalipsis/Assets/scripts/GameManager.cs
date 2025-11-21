@@ -6,16 +6,29 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static GameManager Instance { get; private set; }
 
-    [Header("🔹 Configuración general")]
+    [Header("Texto de Descripción")]
+    [TextArea(3, 10)]
+    public string textoDescripcion = "Clasifica los residuos correctamente:\n\n" +
+                                      "ROJO: Biológicos\n" +
+                                      "AMARILLO: Químicos\n" +
+                                      "VERDE: Reciclables\n" +
+                                      "AZUL: Papel Limpio\n" +
+                                      "NARANJA: Ordinarios";
+
     public TextMeshProUGUI panelTexto;
-    public GameObject prefabBolsa;
 
-    [Header("📊 Datos de clasificación")]
-    public Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro> mapaClasificacion = new();
-    public Dictionary<ResiduoClasificable.TipoResiduo, int> totalPorTipo = new();
-    public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosPorTipo = new();
+    [Header("Panel de Reporte Final")]
+    public TextMeshProUGUI textoReporte;
+
+    [Header("Recompensas por Rendimiento")]
+    [TextArea(2, 3)]
+    public string recompensa100 = "¡CONTRATADO! Salario: $2.000.000 mensuales";
+    [TextArea(2, 3)]
+    public string recompensa50 = "Contrato temporal. Salario: $1.000.000 mensuales";
+    [TextArea(2, 3)]
+    public string recompensa0 = "No fuiste contratado. Intenta de nuevo.";
 
     [Header("Prefabs de bolsas por tipo")]
     public GameObject bolsaRoja;
@@ -24,6 +37,10 @@ public class GameManager : MonoBehaviour
     public GameObject bolsaAzul;
     public GameObject bolsaNaranja;
 
+    [Header("Datos de clasificación")]
+    public Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro> mapaClasificacion = new();
+    public Dictionary<ResiduoClasificable.TipoResiduo, int> totalPorTipo = new();
+    public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosPorTipo = new();
 
     [Header("Conteo de residuos")]
     [SerializeField] private int totalResiduosEscena;
@@ -34,11 +51,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int bolsasDepositadas;
 
     [Header("Evento final")]
-    [SerializeField] private bool eventoActivado=false;
+    [SerializeField] private bool eventoActivado = false;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // Mapa de colores para cada tipo de residuo
         mapaClasificacion = new Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro>
@@ -53,6 +77,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Mostrar texto de descripción estático
+        if (panelTexto != null)
+        {
+            panelTexto.text = textoDescripcion;
+        }
+
+        // Limpiar el panel de reporte al inicio
+        if (textoReporte != null)
+        {
+            textoReporte.text = "Presiona el botón para finalizar";
+        }
+
         // Cuenta la cantidad de residuos al iniciar
         var residuos = FindObjectsByType<ResiduoClasificable>(FindObjectsSortMode.None);
         totalResiduosEscena = residuos.Count(r => !r.esTarro);
@@ -67,12 +103,38 @@ public class GameManager : MonoBehaviour
             { ResiduoClasificable.TipoResiduo.Ordinario, 3 }
         };
 
-        ActualizarPanel();
+        Debug.Log($"🎮 GameManager iniciado - Total de residuos en escena: {totalResiduosEscena}");
+    }
+
+    // 🔸 Registrar cada residuo depositado correctamente
+    public void RegistrarDeposito(ResiduoClasificable.TipoResiduo tipo)
+    {
+        if (!depositadosPorTipo.ContainsKey(tipo))
+            depositadosPorTipo[tipo] = 0;
+
+        depositadosPorTipo[tipo]++;
+
+        Debug.Log($"{tipo} clasificado correctamente ({depositadosPorTipo[tipo]}/{totalPorTipo[tipo]})");
+
+        // Verificar si se completó la cantidad requerida
+        if (depositadosPorTipo[tipo] >= totalPorTipo[tipo])
+        {
+            Debug.Log($"¡{tipo} completado!");
+            GenerarBolsaParabolica(tipo);
+        }
     }
 
     public void RegistrarResiduoRecogido()
     {
         residuosRecogidos++;
+        Debug.Log($"Residuo recogido | Total: {residuosRecogidos}/{totalResiduosEscena}");
+        RevisarFinDelJuego();
+    }
+
+    public void RegistrarBolsaDepositada()
+    {
+        bolsasDepositadas++;
+        Debug.Log($"Bolsa depositada | Total bolsas: {bolsasDepositadas}/{totalBolsasEscena}");
         RevisarFinDelJuego();
     }
 
@@ -89,53 +151,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
-    // 🔸 Registrar cada residuo depositado correctamente
-    public void RegistrarDeposito(ResiduoClasificable.TipoResiduo tipo)
-    {
-        if (!depositadosPorTipo.ContainsKey(tipo))
-            depositadosPorTipo[tipo] = 0;
-
-        depositadosPorTipo[tipo]++;
-
-        Debug.Log($"✅ {tipo} clasificado correctamente ({depositadosPorTipo[tipo]}/{totalPorTipo[tipo]})");
-
-        // Verificar si se completó la cantidad requerida
-        if (depositadosPorTipo[tipo] >= totalPorTipo[tipo])
-        {
-            Debug.Log($"🎉 ¡{tipo} completado!");
-            GenerarBolsaParabolica(tipo);
-        }
-
-        ActualizarPanel();
-    }
-
-    // 🔹 Actualizar texto del panel
-    void ActualizarPanel()
-    {
-        if (panelTexto == null) return;
-
-        string texto = "";
-        foreach (var tipo in totalPorTipo.Keys)
-        {
-            int faltan = totalPorTipo[tipo] - depositadosPorTipo.GetValueOrDefault(tipo, 0);
-            texto += $"{tipo}: {(faltan > 0 ? $"Faltan {faltan}" : "¡Completado!")}\n";
-        }
-
-        panelTexto.text = texto;
-        Debug.Log(texto);
-    }
-
     // 👜 Generar bolsa con color y trayectoria parabólica desde el SpawnPoint
     private void GenerarBolsaParabolica(ResiduoClasificable.TipoResiduo tipo)
     {
-        if (prefabBolsa == null)
-        {
-            Debug.LogWarning("⚠️ Falta asignar el prefabBolsa en el Inspector.");
-            return;
-        }
-
         // Buscar el tarro correspondiente a ese tipo
         ResiduoClasificable tarroOrigen = null;
         foreach (var t in FindObjectsOfType<ResiduoClasificable>())
@@ -149,7 +167,7 @@ public class GameManager : MonoBehaviour
 
         if (tarroOrigen == null)
         {
-            Debug.LogWarning($"⚠️ No se encontró tarro para el tipo {tipo}");
+            Debug.LogWarning($"No se encontró tarro para el tipo {tipo}");
             return;
         }
 
@@ -168,19 +186,22 @@ public class GameManager : MonoBehaviour
             // fallback por si no existe el SpawnPoint
             spawnPos = tarroOrigen.transform.position + tarroOrigen.transform.up * 0.45f;
             spawnRot = tarroOrigen.transform.rotation;
-            Debug.LogWarning($"⚠️ El tarro {tarroOrigen.name} no tiene SpawnPoint, usando posición por defecto.");
+            Debug.LogWarning($"El tarro {tarroOrigen.name} no tiene SpawnPoint, usando posición por defecto.");
         }
 
         // Instanciar la bolsa en el punto exacto
         GameObject prefab = ObtenerPrefabBolsa(tipo);
+        if (prefab == null)
+        {
+            Debug.LogWarning($"No hay prefab de bolsa asignado para {tipo}");
+            return;
+        }
+
         GameObject bolsa = Instantiate(prefab, spawnPos, spawnRot);
-
         bolsa.name = $"Bolsa_{tipo}";
-
 
         // Registrar bolsa creada
         totalBolsasEscena++;
-
 
         // Aplicar color dinámico según el tipo de residuo
         Renderer renderer = bolsa.GetComponentInChildren<Renderer>();
@@ -206,10 +227,10 @@ public class GameManager : MonoBehaviour
 
             // Dirección de salida = eje Z del SpawnPoint + leve inclinación hacia arriba
             Vector3 direccion = (spawnRot * Vector3.forward + Vector3.up * 0.15f).normalized;
-            float fuerza = 3.5f; // ajustada para lanzamiento más suave
+            float fuerza = 3.5f;
             rb.AddForce(direccion * fuerza, ForceMode.Impulse);
 
-            // Pequeña rotación aleatoria para que no salga rígida
+            // Pequeña rotación aleatoria
             rb.AddTorque(Random.insideUnitSphere * 1f, ForceMode.Impulse);
 
             // Animación de aparición
@@ -218,10 +239,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"⚠️ La bolsa {bolsa.name} no tiene Rigidbody asignado.");
+            Debug.LogWarning($"La bolsa {bolsa.name} no tiene Rigidbody asignado.");
         }
 
-        Debug.Log($"👜 Bolsa de {tipo} lanzada desde SpawnPoint de {tarroOrigen.name}");
+        Debug.Log($"Bolsa de {tipo} lanzada desde SpawnPoint de {tarroOrigen.name}");
     }
 
     // ✨ Animación de aparición (pop suave)
@@ -235,7 +256,7 @@ public class GameManager : MonoBehaviour
         while (tiempo < duracion)
         {
             float t = tiempo / duracion;
-            float curva = Mathf.Sin(t * Mathf.PI * 0.5f); // suavizado
+            float curva = Mathf.Sin(t * Mathf.PI * 0.5f);
             obj.localScale = Vector3.Lerp(escalaInicial, escalaFinal, curva);
 
             tiempo += Time.deltaTime;
@@ -245,7 +266,7 @@ public class GameManager : MonoBehaviour
         obj.localScale = escalaFinal;
     }
 
-    // ⏱️ Activar el collider después de un delay
+    // ⏱ Activar el collider después de un delay
     private IEnumerator ActivarColliderDespues(Collider col, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -267,18 +288,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RegistrarBolsaDepositada()
-    {
-        bolsasDepositadas++;
-        RevisarFinDelJuego();
-    }
-
     private void RevisarFinDelJuego()
     {
         if (eventoActivado) return;
 
         bool todosResiduosRecogidos = residuosRecogidos >= totalResiduosEscena;
         bool todasBolsasDepositadas = bolsasDepositadas >= totalBolsasEscena;
+
+        Debug.Log($"Revisión: Residuos {residuosRecogidos}/{totalResiduosEscena} | Bolsas {bolsasDepositadas}/{totalBolsasEscena}");
 
         if (todosResiduosRecogidos && todasBolsasDepositadas)
         {
@@ -289,14 +306,67 @@ public class GameManager : MonoBehaviour
 
     private void ActivarEventoFinal()
     {
-        Debug.Log("🎉 TODOS LOS RESIDUOS recogidos y TODAS LAS BOLSAS depositadas");
-        // Logica:
-        // sonido del teléfono
-        // animación
-        // video 3D
-        // score final
+        Debug.Log("TODOS LOS RESIDUOS recogidos y TODAS LAS BOLSAS depositadas");
+        // Aquí puedes activar: sonido del teléfono, animación, video 3D, etc.
     }
 
+    // Este método se llama desde el XR Simple Interactable del botón
+    public void FinalizarJuego()
+    {
+        Debug.Log("Finalizando juego y generando reporte...");
 
+        // Calcular porcentaje de éxito
+        float porcentaje = (totalResiduosEscena > 0) ?
+            ((float)residuosRecogidos / totalResiduosEscena) * 100f : 0f;
 
+        Debug.Log($"Porcentaje de clasificación: {porcentaje:F1}%");
+
+        // Determinar resultado
+        string resultado = "";
+        string recompensa = "";
+
+        if (porcentaje >= 100f)
+        {
+            resultado = "¡EXCELENTE!";
+            recompensa = recompensa100;
+        }
+        else if (porcentaje >= 50f)
+        {
+            resultado = "ACEPTABLE";
+            recompensa = recompensa50;
+        }
+        else
+        {
+            resultado = "INSUFICIENTE";
+            recompensa = recompensa0;
+        }
+
+        // Generar texto del reporte
+        string reporte = $"<size=48><b>{resultado}</b></size>\n\n";
+        reporte += $"<size=32>Porcentaje de éxito: <b>{porcentaje:F1}%</b></size>\n\n";
+        reporte += $"<size=24>Residuos clasificados: {residuosRecogidos}/{totalResiduosEscena}</size>\n\n";
+        reporte += "━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+        // Detalle por tipo
+        reporte += "<size=20><b>Detalle de clasificación:</b></size>\n";
+        foreach (var kvp in depositadosPorTipo)
+        {
+            if (kvp.Value > 0)
+            {
+                reporte += $"• {kvp.Key}: {kvp.Value}\n";
+            }
+        }
+        reporte += $"\n<size=20>• Bolsas depositadas: {bolsasDepositadas}</size>\n\n";
+
+        reporte += "━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        reporte += $"<size=28><b>{recompensa}</b></size>";
+
+        // Mostrar panel de reporte
+        if (textoReporte != null)
+        {
+            textoReporte.text = reporte;
+        }
+
+        Debug.Log("Reporte final generado y mostrado");
+    }
 }

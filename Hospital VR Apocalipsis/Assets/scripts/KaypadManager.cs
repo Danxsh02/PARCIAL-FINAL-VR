@@ -44,4 +44,13 @@ public class KeypadManager : MonoBehaviour
             display.text = "";
         }
     }
+    public void DeleteLastDigit()
+    {
+        if (currentInput.Length > 0)
+        {
+            currentInput = currentInput.Substring(0, currentInput.Length - 1);
+            display.text = currentInput;
+        }
+    }
+
 }
