@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Texto de Descripción")]
+    [Header("📋 Texto de Descripción (Estático)")]
     [TextArea(3, 10)]
     public string textoDescripcion = "Clasifica los residuos correctamente:\n\n" +
                                       "ROJO: Biológicos\n" +
@@ -49,6 +49,10 @@ public class GameManager : MonoBehaviour
     [Header("Conteo de bolsas")]
     [SerializeField] private int totalBolsasEscena;
     [SerializeField] private int bolsasDepositadas;
+
+    [Header("Conteo de manchas de sangre")]
+    [SerializeField] private int totalManchasEscena;
+    [SerializeField] private int manchasLimpiadas;
 
     [Header("Evento final")]
     [SerializeField] private bool eventoActivado = false;
@@ -93,6 +97,10 @@ public class GameManager : MonoBehaviour
         var residuos = FindObjectsByType<ResiduoClasificable>(FindObjectsSortMode.None);
         totalResiduosEscena = residuos.Count(r => !r.esTarro);
 
+        // Cuenta la cantidad de manchas de sangre al iniciar
+        var manchas = FindObjectsByType<BloodStainFade>(FindObjectsSortMode.None);
+        totalManchasEscena = manchas.Length;
+
         // Cuántos residuos necesita cada tipo para generar su bolsa
         totalPorTipo = new Dictionary<ResiduoClasificable.TipoResiduo, int>
         {
@@ -103,7 +111,7 @@ public class GameManager : MonoBehaviour
             { ResiduoClasificable.TipoResiduo.Ordinario, 3 }
         };
 
-        Debug.Log($"🎮 GameManager iniciado - Total de residuos en escena: {totalResiduosEscena}");
+        Debug.Log($"GameManager iniciado - Total de residuos: {totalResiduosEscena} | Manchas: {totalManchasEscena}");
     }
 
     // 🔸 Registrar cada residuo depositado correctamente
@@ -119,7 +127,7 @@ public class GameManager : MonoBehaviour
         // Verificar si se completó la cantidad requerida
         if (depositadosPorTipo[tipo] >= totalPorTipo[tipo])
         {
-            Debug.Log($"¡{tipo} completado!");
+            Debug.Log($"{tipo} completado");
             GenerarBolsaParabolica(tipo);
         }
     }
@@ -138,6 +146,13 @@ public class GameManager : MonoBehaviour
         RevisarFinDelJuego();
     }
 
+    public void RegistrarManchaLimpiada()
+    {
+        manchasLimpiadas++;
+        Debug.Log($"Mancha limpiada | Total: {manchasLimpiadas}/{totalManchasEscena}");
+        RevisarFinDelJuego();
+    }
+
     private GameObject ObtenerPrefabBolsa(ResiduoClasificable.TipoResiduo tipo)
     {
         switch (tipo)
@@ -151,7 +166,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 👜 Generar bolsa con color y trayectoria parabólica desde el SpawnPoint
+    // Generar bolsa con color y trayectoria parabólica desde el SpawnPoint
     private void GenerarBolsaParabolica(ResiduoClasificable.TipoResiduo tipo)
     {
         // Buscar el tarro correspondiente a ese tipo
@@ -171,7 +186,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // ✅ Buscar el punto de spawn dentro del tarro
+        // Buscar el punto de spawn dentro del tarro
         Transform spawnPoint = tarroOrigen.transform.Find("SpawnPoint");
         Vector3 spawnPos;
         Quaternion spawnRot;
@@ -193,7 +208,7 @@ public class GameManager : MonoBehaviour
         GameObject prefab = ObtenerPrefabBolsa(tipo);
         if (prefab == null)
         {
-            Debug.LogWarning($"No hay prefab de bolsa asignado para {tipo}");
+            Debug.LogWarning($" No hay prefab de bolsa asignado para {tipo}");
             return;
         }
 
@@ -210,7 +225,7 @@ public class GameManager : MonoBehaviour
             renderer.material.color = ObtenerColorDelResiduo(tipo);
         }
 
-        // 🔹 DESACTIVAR COLLIDER TEMPORALMENTE para evitar atasco
+        // DESACTIVAR COLLIDER TEMPORALMENTE para evitar atasco
         Collider bolsaCollider = bolsa.GetComponent<Collider>();
         if (bolsaCollider != null)
         {
@@ -245,7 +260,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Bolsa de {tipo} lanzada desde SpawnPoint de {tarroOrigen.name}");
     }
 
-    // ✨ Animación de aparición (pop suave)
+    // Animación de aparición 
     private IEnumerator AnimarAparicion(Transform obj)
     {
         float duracion = 0.25f;
@@ -266,7 +281,7 @@ public class GameManager : MonoBehaviour
         obj.localScale = escalaFinal;
     }
 
-    // ⏱ Activar el collider después de un delay
+    //Activar el collider después de un delay
     private IEnumerator ActivarColliderDespues(Collider col, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -274,7 +289,7 @@ public class GameManager : MonoBehaviour
             col.enabled = true;
     }
 
-    // 🎨 Obtener color según tipo
+    // Obtener color según tipo
     private Color ObtenerColorDelResiduo(ResiduoClasificable.TipoResiduo tipo)
     {
         switch (mapaClasificacion[tipo])
@@ -294,10 +309,11 @@ public class GameManager : MonoBehaviour
 
         bool todosResiduosRecogidos = residuosRecogidos >= totalResiduosEscena;
         bool todasBolsasDepositadas = bolsasDepositadas >= totalBolsasEscena;
+        bool todasManchasLimpiadas = manchasLimpiadas >= totalManchasEscena;
 
-        Debug.Log($"Revisión: Residuos {residuosRecogidos}/{totalResiduosEscena} | Bolsas {bolsasDepositadas}/{totalBolsasEscena}");
+        Debug.Log($"Revisión: Residuos {residuosRecogidos}/{totalResiduosEscena} | Bolsas {bolsasDepositadas}/{totalBolsasEscena} | Manchas {manchasLimpiadas}/{totalManchasEscena}");
 
-        if (todosResiduosRecogidos && todasBolsasDepositadas)
+        if (todosResiduosRecogidos && todasBolsasDepositadas && todasManchasLimpiadas)
         {
             eventoActivado = true;
             ActivarEventoFinal();
@@ -306,7 +322,7 @@ public class GameManager : MonoBehaviour
 
     private void ActivarEventoFinal()
     {
-        Debug.Log("TODOS LOS RESIDUOS recogidos y TODAS LAS BOLSAS depositadas");
+        Debug.Log("TAREA COMPLETADA Todos los residuos clasificados, bolsas depositadas y manchas limpiadas");
         // Aquí puedes activar: sonido del teléfono, animación, video 3D, etc.
     }
 
@@ -315,11 +331,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Finalizando juego y generando reporte...");
 
-        // Calcular porcentaje de éxito
-        float porcentaje = (totalResiduosEscena > 0) ?
-            ((float)residuosRecogidos / totalResiduosEscena) * 100f : 0f;
+        // Calcular totales
+        int totalTareas = totalResiduosEscena + totalBolsasEscena + totalManchasEscena;
+        int tareasCompletadas = residuosRecogidos + bolsasDepositadas + manchasLimpiadas;
 
-        Debug.Log($"Porcentaje de clasificación: {porcentaje:F1}%");
+        float porcentaje = (totalTareas > 0) ?
+            ((float)tareasCompletadas / totalTareas) * 100f : 0f;
+
+        Debug.Log($"Porcentaje total: {porcentaje:F1}%");
 
         // Determinar resultado
         string resultado = "";
@@ -341,24 +360,15 @@ public class GameManager : MonoBehaviour
             recompensa = recompensa0;
         }
 
-        // Generar texto del reporte
+        // Generar texto del reporte SIMPLE
         string reporte = $"<size=48><b>{resultado}</b></size>\n\n";
-        reporte += $"<size=32>Porcentaje de éxito: <b>{porcentaje:F1}%</b></size>\n\n";
-        reporte += $"<size=24>Residuos clasificados: {residuosRecogidos}/{totalResiduosEscena}</size>\n\n";
-        reporte += "━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        reporte += $"<size=32>Porcentaje: <b>{porcentaje:F1}%</b></size>\n\n";
 
-        // Detalle por tipo
-        reporte += "<size=20><b>Detalle de clasificación:</b></size>\n";
-        foreach (var kvp in depositadosPorTipo)
-        {
-            if (kvp.Value > 0)
-            {
-                reporte += $"• {kvp.Key}: {kvp.Value}\n";
-            }
-        }
-        reporte += $"\n<size=20>• Bolsas depositadas: {bolsasDepositadas}</size>\n\n";
-
-        reporte += "━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        // Resumen simple
+        reporte += "<size=24><b>Resumen de tareas:</b></size>\n\n";
+        reporte += $"<size=20>Bolsas depositadas: {bolsasDepositadas}/{totalBolsasEscena}</size>\n";
+        reporte += $"<size=20>Residuos clasificados: {residuosRecogidos}/{totalResiduosEscena}</size>\n";
+        reporte += $"<size=20>Manchas limpiadas: {manchasLimpiadas}/{totalManchasEscena}</size>\n\n";
         reporte += $"<size=28><b>{recompensa}</b></size>";
 
         // Mostrar panel de reporte

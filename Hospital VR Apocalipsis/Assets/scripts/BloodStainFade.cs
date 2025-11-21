@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -6,8 +6,8 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 [RequireComponent(typeof(Renderer))]
 public class BloodStainFade : MonoBehaviour
 {
-    [Header("Configuración de Limpieza")]
-    [Tooltip("Cuánto se reduce la opacidad por cada click")]
+    [Header("ConfiguraciÃ³n de Limpieza")]
+    [Tooltip("CuÃ¡nto se reduce la opacidad por cada click")]
     public float fadeAmountPerClick = 0.25f; // 4 clicks para limpiar completamente
 
     [Header("Feedback Visual (Opcional)")]
@@ -104,7 +104,7 @@ public class BloodStainFade : MonoBehaviour
         }
     }
 
-    // Este método se llama cuando se presiona el gatillo mientras se sostiene la esponja
+    // Este mÃ©todo se llama cuando se presiona el gatillo mientras se sostiene la esponja
     private void OnSpongeActivated(ActivateEventArgs args)
     {
         if (spongeInContact != null && spongeInContact.CanClean())
@@ -117,7 +117,7 @@ public class BloodStainFade : MonoBehaviour
     {
         if (showDebugLogs)
         {
-            Debug.Log($"¡Click en mancha! Alpha antes: {currentAlpha}");
+            Debug.Log($"Â¡Click en mancha! Alpha antes: {currentAlpha}");
         }
 
         // Reducir la opacidad
@@ -138,15 +138,21 @@ public class BloodStainFade : MonoBehaviour
 
         if (showDebugLogs)
         {
-            Debug.Log($"Alpha después: {currentAlpha}");
+            Debug.Log($"Alpha despuÃ©s: {currentAlpha}");
         }
 
-        // Destruir si está completamente limpio
+        // Destruir si estÃ¡ completamente limpio
         if (currentAlpha <= 0f)
         {
             if (showDebugLogs)
             {
-                Debug.Log("¡Mancha completamente limpia! Destruyendo objeto...");
+                Debug.Log("Â¡Mancha completamente limpia! Destruyendo objeto...");
+            }
+
+            // ðŸ”¥ REGISTRAR EN EL GAMEMANAGER
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RegistrarManchaLimpiada();
             }
 
             // Desuscribirse antes de destruir
