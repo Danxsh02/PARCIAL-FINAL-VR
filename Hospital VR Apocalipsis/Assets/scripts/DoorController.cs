@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
-    [Header("Código de acceso de esta puerta")]
+    [Header("Codigo de acceso de esta puerta")]
     public string accessCode = "2580";
 
     [Header("Punto de bisagra (Empty que rota la puerta)")]
     public Transform hinge;
 
-    [Header("Ángulo de apertura")]
+    [Header("angulo de apertura")]
     public float openAngle = 90f;
 
     public float speed = 2f;

@@ -5,10 +5,10 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class ResiduoClasificable : MonoBehaviour
 {
     public enum ColorTarro { Rojo, Amarillo, Verde, Azul, Naranja }
-    public enum TipoResiduo { Biologico, Quimico, Reciclable, PapelLimpio, Ordinario }
+    public enum TipoResiduo { Biologico, Quimico, Organico, Reciclable, Ordinario }
 
-    [Header("Configuración general")]
-    public bool esTarro = false;
+    [Header("Configuración del objeto")]
+    public bool esTarro = false; // Indica si el objeto es un tarro o un residuo
 
     [Header("Solo para residuos")]
     public TipoResiduo tipoResiduo;
@@ -17,16 +17,19 @@ public class ResiduoClasificable : MonoBehaviour
     public ColorTarro colorTarro;
     public TipoResiduo tipoAceptado;
 
-    [Header("⏱️ Configuración de destrucción")]
-    [Tooltip("Tiempo en segundos antes de destruir el residuo correcto")]
+    [Header("Configuración de destrucción del residuo")]
+
+    //Tiempo antes de destruir el residuo correcto
     public float tiempoAntesDestruir = 0.5f;
-    [Tooltip("¿Animar antes de destruir?")]
+
+    //Animar antes de destruir
     public bool usarAnimacion = true;
 
     private UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socket;
 
     private void OnEnable()
     {
+        //Si el objeto es un tarro, obtenemomsos el socket interactor y validamos residuos que entren
         if (esTarro)
         {
             socket = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor>();
@@ -37,25 +40,27 @@ public class ResiduoClasificable : MonoBehaviour
 
     private void OnDisable()
     {
+        //Si el tarro se desactiva, removemos el listener
         if (esTarro && socket != null)
             socket.selectEntered.RemoveListener(ValidarResiduo);
     }
 
     private void ValidarResiduo(SelectEnterEventArgs args)
     {
+        //Obtenemos el componente ResiduoClasificable del objeto que entra en el tarro
         ResiduoClasificable residuo = args.interactableObject.transform.GetComponent<ResiduoClasificable>();
 
         if (residuo != null && !residuo.esTarro)
         {
             if (residuo.tipoResiduo == tipoAceptado)
             {
-                Debug.Log($"✅ {residuo.tipoResiduo} clasificado correctamente en {colorTarro}");
+                Debug.Log($" {residuo.tipoResiduo} clasificado correctamente en {colorTarro}");
 
                 // Registrar en el GameManager
                 GameManager.Instance.RegistrarDeposito(residuo.tipoResiduo);
-                FeedbackCorrecto();
 
-                // 🔥 DESTRUIR EL RESIDUO CON O SIN ANIMACIÓN
+
+                // Destruir residuo después de un tiempo 
                 if (usarAnimacion)
                 {
                     StartCoroutine(DestruirConAnimacion(residuo.gameObject));
@@ -69,18 +74,20 @@ public class ResiduoClasificable : MonoBehaviour
             }
             else
             {
-                Debug.Log($"❌ {residuo.tipoResiduo} NO pertenece al tarro {colorTarro}");
-                FeedbackError();
+                Debug.Log($"{residuo.tipoResiduo} NO pertenece al tarro {colorTarro}");
+
                 ExpulsarResiduo(args.interactableObject.transform);
             }
         }
     }
 
+    // Expulsar residuo incorrecto
     private void ExpulsarResiduo(Transform residuo)
     {
         var grabInteractable = residuo.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
         var interactable = grabInteractable as UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable;
 
+        // Cancela la selección del interactable y empuja hacia arriba
         if (interactable != null && socket != null)
         {
             socket.interactionManager.CancelInteractableSelection(interactable);
@@ -88,7 +95,7 @@ public class ResiduoClasificable : MonoBehaviour
         }
     }
 
-    // ✨ Animación de desaparición
+    //  Animación de desaparición
     private IEnumerator DestruirConAnimacion(GameObject obj)
     {
         // Desactivar interacción XR para que no se pueda agarrar
@@ -128,18 +135,7 @@ public class ResiduoClasificable : MonoBehaviour
 
         // Destruir el objeto
         Destroy(obj);
-        Debug.Log($"🗑️ Residuo destruido");
+        Debug.Log($"Residuo destruido");
     }
 
-    private void FeedbackCorrecto()
-    {
-        // Luz verde, sonido, vibración
-        Debug.Log("✅ Feedback correcto activado");
-    }
-
-    private void FeedbackError()
-    {
-        // Luz roja, sonido de error, vibración
-        Debug.Log("❌ Feedback error activado");
-    }
 }

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Texto de Descripcion (Estatico)")]
+    [Header("Texto de Descripcion")]
     [TextArea(3, 10)]
     public string textoDescripcion = "Clasifica los residuos correctamente:\n\n" +
                                       "ROJO: Biologicos\n" +
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     public GameObject bolsaAzul;
     public GameObject bolsaNaranja;
 
-    [Header("Datos de clasificacion")]
+    [Header("Datos de clasificacion de basura")]
     public Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro> mapaClasificacion = new();
     public Dictionary<ResiduoClasificable.TipoResiduo, int> totalPorTipo = new();
     public Dictionary<ResiduoClasificable.TipoResiduo, int> depositadosPorTipo = new();
@@ -51,15 +51,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int totalBolsasEscena;
     [SerializeField] private int bolsasDepositadas;
 
-    [Header("Conteo de manchas de sangre")]
+    [Header("Conteo de manchas")]
     [SerializeField] private int totalManchasEscena;
     [SerializeField] private int manchasLimpiadas;
 
-    [Header("Sistema de Logros")]
-    public GameObject imagenLogroResiduos; // Imagen para completar residuos al primer intento
-    public GameObject imagenLogroBolsas; // Imagen para completar bolsas al primer intento
-    public GameObject imagenLogroManchas; // Imagen para completar manchas al primer intento
-    public GameObject imagenLogroPerfecto; // Imagen para completar todo al primer intento
+    [Header("Logros")]
+    public GameObject imagenLogroResiduos; 
+    public GameObject imagenLogroBolsas; 
+    public GameObject imagenLogroManchas; 
+    public GameObject imagenLogroPerfecto; 
 
     [SerializeField] private int intentosReporte = 0;
     [SerializeField] private bool logroResiduosObtenido = false;
@@ -68,13 +68,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool logroPerfectoObtenido = false;
 
     [Header("Limite de Intentos")]
-    public int maxIntentos = 5;
-    public string nombreEscenaFinal = "FinalMalo"; // Nombre de la escena a cargar
-    public string nombreEscenaPerfecta = "FinalBueno"; // Escena especial para logro perfecto
-    public float tiempoEsperaAntesCambio = 10f; // Tiempo en segundos antes de cambiar de escena
+    public int maxIntentos = 3;
+    public string nombreEscenaFinal = "FinalMalo"; 
+    public string nombreEscenaPerfecta = "FinalBueno"; 
+    public float tiempoEsperaAntesCambio = 10f; 
 
     [Header("Evento final")]
     [SerializeField] private bool eventoActivado = false;
+
+    [Header("Hack")]
+    public bool cheatsModoDesarrolladorActivo = true;
+    public KeyCode teclaTrampa = KeyCode.Alpha8;
 
     private void Awake()
     {
@@ -87,20 +91,19 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // Mapa de colores para cada tipo de residuo
+        // colores para cada tipo de residuo
         mapaClasificacion = new Dictionary<ResiduoClasificable.TipoResiduo, ResiduoClasificable.ColorTarro>
         {
             { ResiduoClasificable.TipoResiduo.Biologico, ResiduoClasificable.ColorTarro.Rojo },
             { ResiduoClasificable.TipoResiduo.Quimico, ResiduoClasificable.ColorTarro.Amarillo },
-            { ResiduoClasificable.TipoResiduo.Reciclable, ResiduoClasificable.ColorTarro.Verde },
-            { ResiduoClasificable.TipoResiduo.PapelLimpio, ResiduoClasificable.ColorTarro.Azul },
+            { ResiduoClasificable.TipoResiduo.Organico, ResiduoClasificable.ColorTarro.Verde },
+            { ResiduoClasificable.TipoResiduo.Reciclable, ResiduoClasificable.ColorTarro.Azul },
             { ResiduoClasificable.TipoResiduo.Ordinario, ResiduoClasificable.ColorTarro.Naranja }
         };
     }
 
     private void Start()
     {
-        // Mostrar texto de descripción estático
         if (panelTexto != null)
         {
             panelTexto.text = textoDescripcion;
@@ -112,34 +115,34 @@ public class GameManager : MonoBehaviour
             textoReporte.text = "Presiona el botón para finalizar";
         }
 
-        // Ocultar todas las imágenes de logros al inicio
+        // Ocultar imágenes de logros al inicio
         if (imagenLogroResiduos != null) imagenLogroResiduos.SetActive(false);
         if (imagenLogroBolsas != null) imagenLogroBolsas.SetActive(false);
         if (imagenLogroManchas != null) imagenLogroManchas.SetActive(false);
         if (imagenLogroPerfecto != null) imagenLogroPerfecto.SetActive(false);
 
-        // Cuenta la cantidad de residuos al iniciar
+        // cantidad de residuos al iniciar
         var residuos = FindObjectsByType<ResiduoClasificable>(FindObjectsSortMode.None);
         totalResiduosEscena = residuos.Count(r => !r.esTarro);
 
-        // Cuenta la cantidad de manchas de sangre al iniciar
+        // cantidad de manchas al iniciar
         var manchas = FindObjectsByType<BloodStainFade>(FindObjectsSortMode.None);
         totalManchasEscena = manchas.Length;
 
-        // Cuántos residuos necesita cada tipo para generar su bolsa
+        // residuos necesita cada tipo para generar su bolsa
         totalPorTipo = new Dictionary<ResiduoClasificable.TipoResiduo, int>
         {
-            { ResiduoClasificable.TipoResiduo.Biologico, 1 },
-            { ResiduoClasificable.TipoResiduo.Quimico, 2 },
-            { ResiduoClasificable.TipoResiduo.Reciclable, 4 },
-            { ResiduoClasificable.TipoResiduo.PapelLimpio, 2 },
+            { ResiduoClasificable.TipoResiduo.Biologico, 3 },
+            { ResiduoClasificable.TipoResiduo.Quimico, 3 },
+            { ResiduoClasificable.TipoResiduo.Organico, 3 },
+            { ResiduoClasificable.TipoResiduo.Reciclable, 3 },
             { ResiduoClasificable.TipoResiduo.Ordinario, 3 }
         };
 
         Debug.Log($"GameManager iniciado - Total de residuos: {totalResiduosEscena} | Manchas: {totalManchasEscena}");
     }
 
-    // 🔸 Registrar cada residuo depositado correctamente
+    // Registrar cada residuo depositado 
     public void RegistrarDeposito(ResiduoClasificable.TipoResiduo tipo)
     {
         if (!depositadosPorTipo.ContainsKey(tipo))
@@ -149,32 +152,40 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Clasificado correctamente: {tipo} ({depositadosPorTipo[tipo]}/{totalPorTipo[tipo]})");
 
-        // Verificar si se completó la cantidad requerida
+        // Verificar si se completo la cantidad 
         if (depositadosPorTipo[tipo] >= totalPorTipo[tipo])
         {
-            Debug.Log($"{tipo} completado!");
+            Debug.Log($"{tipo} completado");
             GenerarBolsaParabolica(tipo);
         }
     }
 
+    private void Update()
+    {
+        // Completar todo de una
+        if (cheatsModoDesarrolladorActivo && Input.GetKeyDown(teclaTrampa))
+        {
+            CheatCompletarTodo();
+        }
+    }
     public void RegistrarResiduoRecogido()
     {
         residuosRecogidos++;
-        Debug.Log($"Residuo recogido | Total: {residuosRecogidos}/{totalResiduosEscena}");
+        Debug.Log($"Residuo recogido, Total: {residuosRecogidos}/{totalResiduosEscena}");
         RevisarFinDelJuego();
     }
 
     public void RegistrarBolsaDepositada()
     {
         bolsasDepositadas++;
-        Debug.Log($"Bolsa depositada | Total bolsas: {bolsasDepositadas}/{totalBolsasEscena}");
+        Debug.Log($"Bolsa depositada, Total bolsas: {bolsasDepositadas}/{totalBolsasEscena}");
         RevisarFinDelJuego();
     }
 
     public void RegistrarManchaLimpiada()
     {
         manchasLimpiadas++;
-        Debug.Log($"Mancha limpiada | Total: {manchasLimpiadas}/{totalManchasEscena}");
+        Debug.Log($"Mancha limpiada, Total: {manchasLimpiadas}/{totalManchasEscena}");
         RevisarFinDelJuego();
     }
 
@@ -184,17 +195,17 @@ public class GameManager : MonoBehaviour
         {
             case ResiduoClasificable.TipoResiduo.Biologico: return bolsaRoja;
             case ResiduoClasificable.TipoResiduo.Quimico: return bolsaAmarilla;
-            case ResiduoClasificable.TipoResiduo.Reciclable: return bolsaVerde;
-            case ResiduoClasificable.TipoResiduo.PapelLimpio: return bolsaAzul;
+            case ResiduoClasificable.TipoResiduo.Organico: return bolsaVerde;
+            case ResiduoClasificable.TipoResiduo.Reciclable: return bolsaAzul;
             case ResiduoClasificable.TipoResiduo.Ordinario: return bolsaNaranja;
             default: return bolsaRoja;
         }
     }
 
-    // 👜 Generar bolsa con color y trayectoria parabólica desde el SpawnPoint
+    // Generar bolsa con color 
     private void GenerarBolsaParabolica(ResiduoClasificable.TipoResiduo tipo)
     {
-        // Buscar el tarro correspondiente a ese tipo
+        // Busca el tarro correspondiente a ese tipo
         ResiduoClasificable tarroOrigen = null;
         foreach (var t in FindObjectsOfType<ResiduoClasificable>())
         {
@@ -211,7 +222,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Buscar el punto de spawn dentro del tarro
+        // Busca el punto de spawn dentro del tarro
         Transform spawnPoint = tarroOrigen.transform.Find("SpawnPoint");
         Vector3 spawnPos;
         Quaternion spawnRot;
@@ -226,7 +237,7 @@ public class GameManager : MonoBehaviour
             // fallback por si no existe el SpawnPoint
             spawnPos = tarroOrigen.transform.position + tarroOrigen.transform.up * 0.45f;
             spawnRot = tarroOrigen.transform.rotation;
-            Debug.LogWarning($"El tarro {tarroOrigen.name} no tiene SpawnPoint, usando posicion por defecto.");
+            Debug.LogWarning($"El tarro {tarroOrigen.name} no tiene Spawn, usando posicion por defecto.");
         }
 
         // Instanciar la bolsa en el punto exacto
@@ -347,39 +358,15 @@ public class GameManager : MonoBehaviour
 
     private void ActivarEventoFinal()
     {
-        Debug.Log("TAREA COMPLETADA! Todos los residuos clasificados, bolsas depositadas y manchas limpiadas");
-        // Aquí puedes activar: sonido del teléfono, animación, video 3D, etc.
+        Debug.Log("Tarea completada, Todos los residuos clasificados, bolsas depositadas y manchas limpiadas");
     }
 
-    // Este método se llama desde el XR Simple Interactable del botón
     public void FinalizarJuego()
     {
         intentosReporte++;
         Debug.Log($"Finalizando juego - Intento #{intentosReporte}");
 
-        // Verificar si se alcanzó el límite de intentos
-        if (intentosReporte >= maxIntentos)
-        {
-            Debug.Log($"Limite de intentos alcanzado ({maxIntentos}). Cargando escena final...");
-            IrAEscenaFinal();
-            return;
-        }
-
-        // Verificar logros SOLO en el primer intento
-        if (intentosReporte == 1)
-        {
-            VerificarLogros();
-
-            // Si consiguió el logro perfecto, redirigir a escena especial
-            if (logroPerfectoObtenido)
-            {
-                Debug.Log("LOGRO PERFECTO conseguido! Redirigiendo a escena especial...");
-                StartCoroutine(CambiarEscenaDespuesDeTiempo(nombreEscenaPerfecta));
-                return; // No mostrar el reporte normal
-            }
-        }
-
-        // Calcular totales
+        // Calcular totales primero
         int totalTareas = totalResiduosEscena + totalBolsasEscena + totalManchasEscena;
         int tareasCompletadas = residuosRecogidos + bolsasDepositadas + manchasLimpiadas;
 
@@ -388,16 +375,81 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Porcentaje total: {porcentaje:F1}%");
 
-        // Determinar resultado
+        // verifica si trodo se completo al 100
+        bool completoTodo = porcentaje >= 100f;
+
+        // Verificar logros solo en el primer intento
+        if (intentosReporte == 1)
+        {
+            VerificarLogros();
+        }
+
+        // Si completo todo para ir al final bueno
+        if (completoTodo)
+        {
+            Debug.Log($"completado todo en el intento #{intentosReporte}! Redirigiendo a FinalBueno");
+
+            // Mostrar mensaje de éxito antes de cambiar
+            if (textoReporte != null)
+            {
+                string reporteExito = "<size=48><b>¡EXCELENTE!</b></size>\n\n";
+                reporteExito += $"<size=28>Porcentaje: <b>100%</b></size>\n";
+                reporteExito += $"<size=16>Completado en intento #{intentosReporte}</size>\n\n";
+                reporteExito += $"<size=20>Bolsas: {bolsasDepositadas}/{totalBolsasEscena} ✓</size>\n";
+                reporteExito += $"<size=20>Residuos: {residuosRecogidos}/{totalResiduosEscena} ✓</size>\n";
+                reporteExito += $"<size=20>Manchas: {manchasLimpiadas}/{totalManchasEscena} ✓</size>\n\n";
+
+                // Mostrar logros si los obtuvo en el primero
+                if (intentosReporte == 1 && (logroResiduosObtenido || logroBolsasObtenido || logroManchasObtenido || logroPerfectoObtenido))
+                {
+                    reporteExito += "<size=18><b> Logros Desbloqueados:</b></size>\n";
+                    if (logroPerfectoObtenido)
+                    {
+                        reporteExito += "<size=16> Trabajo Perfecto (100% al primer intento)</size>\n";
+                    }
+                    else
+                    {
+                        if (logroResiduosObtenido) reporteExito += "<size=16>✓ Clasificador Experto</size>\n";
+                        if (logroBolsasObtenido) reporteExito += "<size=16>✓ Depositador Pro</size>\n";
+                        if (logroManchasObtenido) reporteExito += "<size=16>✓ Limpiador Perfecto</size>\n";
+                    }
+                    reporteExito += "\n";
+                }
+
+                reporteExito += $"<size=22><b>{recompensa100}</b></size>";
+                textoReporte.text = reporteExito;
+            }
+
+            StartCoroutine(CambiarEscenaDespuesDeTiempo(nombreEscenaPerfecta));
+            return; // Salir para ir a FinalBueno
+        }
+
+        // Si 3 intento y no completo para el final malo
+        if (intentosReporte >= 3)
+        {
+            Debug.Log("Intento 3 fallido, yendo al Final Malo");
+
+            if (textoReporte != null)
+            {
+                string reporteFallo = "<size=48><b>INSUFICIENTE</b></size>\n\n";
+                reporteFallo += $"<size=28>Porcentaje: <b>{porcentaje:F1}%</b></size>\n";
+                reporteFallo += $"<size=16>Intento final (3/3)</size>\n\n";
+                reporteFallo += $"<size=20>Bolsas: {bolsasDepositadas}/{totalBolsasEscena}</size>\n";
+                reporteFallo += $"<size=20>Residuos: {residuosRecogidos}/{totalResiduosEscena}</size>\n";
+                reporteFallo += $"<size=20>Manchas: {manchasLimpiadas}/{totalManchasEscena}</size>\n\n";
+                reporteFallo += $"<size=22><b>{recompensa0}</b></size>";
+                textoReporte.text = reporteFallo;
+            }
+
+            StartCoroutine(CambiarEscenaDespuesDeTiempo(nombreEscenaFinal));
+            return;
+        }
+
+        //  Mostrar el reporte del los intentos de las tareas
         string resultado = "";
         string recompensa = "";
 
-        if (porcentaje >= 100f)
-        {
-            resultado = "¡EXCELENTE!";
-            recompensa = recompensa100;
-        }
-        else if (porcentaje >= 50f)
+        if (porcentaje >= 50f)
         {
             resultado = "ACEPTABLE";
             recompensa = recompensa50;
@@ -408,34 +460,17 @@ public class GameManager : MonoBehaviour
             recompensa = recompensa0;
         }
 
-        // Generar texto del reporte SIMPLE
+        // Generar texto del reporte
         string reporte = $"<size=48><b>{resultado}</b></size>\n\n";
         reporte += $"<size=28>Porcentaje: <b>{porcentaje:F1}%</b></size>\n";
-        reporte += $"<size=16>Intento #{intentosReporte} de {maxIntentos}</size>\n\n";
+        reporte += $"<size=16>Intento #{intentosReporte} de 3</size>\n\n";
 
-        // Resumen simple
+        // Resumen
         reporte += $"<size=20>Bolsas: {bolsasDepositadas}/{totalBolsasEscena}</size>\n";
         reporte += $"<size=20>Residuos: {residuosRecogidos}/{totalResiduosEscena}</size>\n";
         reporte += $"<size=20>Manchas: {manchasLimpiadas}/{totalManchasEscena}</size>\n\n";
 
-        // Mostrar logros obtenidos (solo nombres)
-        if (logroResiduosObtenido || logroBolsasObtenido || logroManchasObtenido || logroPerfectoObtenido)
-        {
-            reporte += "<size=18><b>Logros:</b></size>\n";
-
-            if (logroPerfectoObtenido)
-            {
-                reporte += "<size=16>Trabajo Perfecto</size>\n";
-            }
-            else
-            {
-                if (logroResiduosObtenido) reporte += "<size=16>Clasificador Experto</size>\n";
-                if (logroBolsasObtenido) reporte += "<size=16>Depositador Pro</size>\n";
-                if (logroManchasObtenido) reporte += "<size=16>Limpiador Perfecto</size>\n";
-            }
-            reporte += "\n";
-        }
-
+        reporte += $"<size=18><color=yellow>Te quedan {3 - intentosReporte} intento(s)</color></size>\n\n";
         reporte += $"<size=22><b>{recompensa}</b></size>";
 
         // Mostrar panel de reporte
@@ -444,12 +479,12 @@ public class GameManager : MonoBehaviour
             textoReporte.text = reporte;
         }
 
-        Debug.Log("Reporte final generado y mostrado");
+        Debug.Log("Reporte mostrado. El jugador puede seguir intentando.");
     }
 
     private void VerificarLogros()
     {
-        Debug.Log("Verificando logros del primer intento...");
+        Debug.Log("Verificando logros del primer intento");
 
         // Logro: Completar todos los residuos
         if (residuosRecogidos >= totalResiduosEscena && totalResiduosEscena > 0)
@@ -469,7 +504,7 @@ public class GameManager : MonoBehaviour
             if (imagenLogroBolsas != null)
             {
                 imagenLogroBolsas.SetActive(true);
-                Debug.Log("Logro desbloqueado: Depositador Pro");
+                Debug.Log("Logro desbloqueado, Depositador Pro");
             }
         }
 
@@ -480,18 +515,18 @@ public class GameManager : MonoBehaviour
             if (imagenLogroManchas != null)
             {
                 imagenLogroManchas.SetActive(true);
-                Debug.Log("Logro desbloqueado: Limpiador Perfecto");
+                Debug.Log("Logro desbloqueado, Limpiador Perfecto");
             }
         }
 
-        // Logro PERFECTO: Completar las 3 tareas al primer intento
+        // Logro Perfecto: Completar las 3 tareas al primer intento
         if (logroResiduosObtenido && logroBolsasObtenido && logroManchasObtenido)
         {
             logroPerfectoObtenido = true;
             if (imagenLogroPerfecto != null)
             {
                 imagenLogroPerfecto.SetActive(true);
-                Debug.Log("LOGRO ÉPICO DESBLOQUEADO: TRABAJO PERFECTO");
+                Debug.Log("logro desbloqueado, Trabajo perfecto");
             }
 
             // Ocultar los logros individuales si se consiguió el perfecto
@@ -515,5 +550,27 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(tiempoEsperaAntesCambio);
         Debug.Log($"Cargando escena: {nombreEscena}");
         SceneManager.LoadScene(nombreEscena);
+    }
+
+    public void CheatCompletarTodo()
+    {
+        Debug.Log(" Hack, complentando todas las tareas");
+
+        //  Marcar todos los residuos como recogidos
+        residuosRecogidos = totalResiduosEscena;
+        Debug.Log($" Residuos completados: {residuosRecogidos}/{totalResiduosEscena}");
+
+        // Marcar todas las bolsas como depositadas
+        bolsasDepositadas = totalBolsasEscena;
+        Debug.Log($" Bolsas completadas: {bolsasDepositadas}/{totalBolsasEscena}");
+
+        // Marcar todas las manchas como limpiadas
+        manchasLimpiadas = totalManchasEscena;
+        Debug.Log($" Manchas completadas: {manchasLimpiadas}/{totalManchasEscena}");
+
+        // Revisar si se completó el juego
+        RevisarFinDelJuego();
+
+        Debug.Log("Hack al 100%, Presionar boton final");
     }
 }

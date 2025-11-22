@@ -9,7 +9,7 @@ public class HandAwareAttach : MonoBehaviour
     public Transform attachLeft;
     public Transform attachRight;
 
-    [Header("Controladores de mano")]
+    [Header("Hands Controllers")]
     public Transform leftHandController;
     public Transform rightHandController;
 
@@ -22,7 +22,7 @@ public class HandAwareAttach : MonoBehaviour
 
     void Start()
     {
-        // Fix del primer agarre: asignar un attach inicial
+        // asignar un attach inicial
         if (attachRight != null)
             grab.attachTransform = attachRight;
     }
@@ -31,7 +31,7 @@ public class HandAwareAttach : MonoBehaviour
     {
         if (grab == null) return;
 
-        // Solo cambiar attach cuando NO está siendo agarrado
+        // Solo cambiar attach cuando no está siendo agarrado
         if (!grab.isSelected && leftHandController != null && rightHandController != null)
         {
             float distLeft = Vector3.Distance(transform.position, leftHandController.position);

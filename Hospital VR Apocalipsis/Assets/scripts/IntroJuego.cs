@@ -24,7 +24,7 @@ public class IntroJuego : MonoBehaviour
 
     IEnumerator MostrarIntro()
     {
-        // 🔹 Muestra el panel
+        // Muestra el panel
         if (panelIntro != null) panelIntro.SetActive(true);
 
         textoIntro.text = "";
@@ -53,7 +53,7 @@ public class IntroJuego : MonoBehaviour
         // Espera final antes de cerrar
         yield return new WaitForSeconds(2f);
 
-        //  Oculta el panel al terminar
+        //  Oculta el panel al final del dialogo
         panelIntro.SetActive(false);
     }
 
