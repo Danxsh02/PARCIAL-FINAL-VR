@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/FinalMalo.unity
+    guid: d62bfd039056d6e4880810723012434f
+  - enabled: 1
+    path: Assets/Scenes/Hospital VR.unity
+    guid: 21a3f8dfff1396c4296df88a137fe4dd
+  - enabled: 1
+    path: Assets/Scenes/FinalBueno.unity
+    guid: d4b7e4813bd700a4b848e59614edc1b4
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 2bd5b4a316eff584493bbb796174be11, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

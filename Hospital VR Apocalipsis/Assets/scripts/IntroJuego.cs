@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -6,7 +6,6 @@ public class IntroJuego : MonoBehaviour
 {
     [Header("UI")]
     public GameObject panelIntro;
-    public GameObject canvasContenido;
     public TextMeshProUGUI textoIntro;
 
     [Header("Escritura")]
@@ -14,9 +13,9 @@ public class IntroJuego : MonoBehaviour
     public string[] lineasDeTexto;
     public float velocidadEscritura = 0.05f;
     public float esperaEntreLineas = 1.5f;
-    public float esperaDespuesDePar = 2f; // Tiempo que espera antes de borrar
+    public float esperaDespuesDePar = 2f;
     [Range(1, 4)]
-    public int lineasPorPantalla = 2; // Cuántas líneas mostrar antes de borrar
+    public int lineasPorPantalla = 2;
 
     void Start()
     {
@@ -25,17 +24,15 @@ public class IntroJuego : MonoBehaviour
 
     IEnumerator MostrarIntro()
     {
-        if (canvasContenido != null) canvasContenido.SetActive(false);
+        // ðŸ”¹ Muestra el panel
         if (panelIntro != null) panelIntro.SetActive(true);
 
         textoIntro.text = "";
 
         for (int i = 0; i < lineasDeTexto.Length; i++)
         {
-            // Escribir la línea actual
             yield return StartCoroutine(EscribirLinea(lineasDeTexto[i]));
 
-            // Si no es la última línea del grupo, agregar espacio
             if ((i + 1) % lineasPorPantalla != 0 && i < lineasDeTexto.Length - 1)
             {
                 textoIntro.text += "\n\n";
@@ -43,14 +40,12 @@ public class IntroJuego : MonoBehaviour
             }
             else
             {
-                // Completamos un grupo de líneas
                 yield return new WaitForSeconds(esperaDespuesDePar);
 
-                // Si no es la última línea, borramos para el siguiente grupo
                 if (i < lineasDeTexto.Length - 1)
                 {
                     textoIntro.text = "";
-                    yield return new WaitForSeconds(0.3f); // Pequeña pausa después de borrar
+                    yield return new WaitForSeconds(0.3f);
                 }
             }
         }
@@ -58,8 +53,8 @@ public class IntroJuego : MonoBehaviour
         // Espera final antes de cerrar
         yield return new WaitForSeconds(2f);
 
+        //  Oculta el panel al terminar
         panelIntro.SetActive(false);
-        if (canvasContenido != null) canvasContenido.SetActive(true);
     }
 
     IEnumerator EscribirLinea(string linea)
