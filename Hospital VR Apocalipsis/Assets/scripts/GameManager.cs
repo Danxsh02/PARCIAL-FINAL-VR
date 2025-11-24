@@ -132,11 +132,11 @@ public class GameManager : MonoBehaviour
         // residuos necesita cada tipo para generar su bolsa
         totalPorTipo = new Dictionary<ResiduoClasificable.TipoResiduo, int>
         {
-            { ResiduoClasificable.TipoResiduo.Biologico, 3 },
-            { ResiduoClasificable.TipoResiduo.Quimico, 3 },
-            { ResiduoClasificable.TipoResiduo.Organico, 3 },
-            { ResiduoClasificable.TipoResiduo.Reciclable, 3 },
-            { ResiduoClasificable.TipoResiduo.Ordinario, 3 }
+            { ResiduoClasificable.TipoResiduo.Biologico, 7 },
+            { ResiduoClasificable.TipoResiduo.Quimico, 6},
+            { ResiduoClasificable.TipoResiduo.Organico, 6 },
+            { ResiduoClasificable.TipoResiduo.Reciclable, 6 },
+            { ResiduoClasificable.TipoResiduo.Ordinario, 6 }
         };
 
         Debug.Log($"GameManager iniciado - Total de residuos: {totalResiduosEscena} | Manchas: {totalManchasEscena}");
